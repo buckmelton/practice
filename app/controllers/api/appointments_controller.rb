@@ -8,6 +8,10 @@ class Api::AppointmentsController < ApplicationController
       @appts = @appts.where(doctor_id: index_params[:doctor_id])
     end
 
+    if index_params[:start_date].present? && index_params[:end_date].present?
+      @appts = @appts.where(start_time: Time.zone.parse(params[:start_date])..Time.zone.parse(params[:end_date]))
+    end
+
     render json: @appts, include:
       {
         doctor: { only: [:id, :name] },
@@ -23,6 +27,6 @@ class Api::AppointmentsController < ApplicationController
   private
 
   def index_params
-    params.permit(:doctor_id)
+    params.permit(:doctor_id, :start_date, :end_date)
   end
 end
