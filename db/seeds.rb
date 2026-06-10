@@ -18,26 +18,29 @@ DOCTOR_COUNT.times do
     name: Faker::Name.name
   )
 
+  base_time = Time.zone.local(2026, 6, 8, 8, 0)
+  time_slot = 0
+
   PATIENTS_PER_DOCTOR.times do
     patient = doctor.patients.create!(
       name: Faker::Name.name
     )
 
-    # past appointments
-    5.times do |k|
+    PAST_APPOINTMENTS_PER_PATIENT.times do
+      time_slot += 1
       patient.appointments.create!(
-        doctor: patient.doctor,
+        doctor: doctor,
         duration_in_minutes: 50,
-        start_time: Time.current - k.weeks - 1
+        start_time: base_time - time_slot * 60.minutes
       )
     end
 
-    # future appointments
-    5.times do |k|
+    FUTURE_APPOINTMENTS_PER_PATIENT.times do
+      time_slot += 1
       patient.appointments.create!(
-        doctor: patient.doctor,
+        doctor: doctor,
         duration_in_minutes: 50,
-        start_time: Time.current + k.weeks
+        start_time: base_time + time_slot * 60.minutes
       )
     end
   end
