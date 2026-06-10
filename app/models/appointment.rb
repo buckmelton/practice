@@ -2,6 +2,8 @@ class Appointment < ApplicationRecord
   belongs_to :doctor
   belongs_to :patient
 
+  scope :with_doctor_and_patient, -> { includes(:doctor, :patient) }  
+
   validates :start_time, presence: true
   validates :duration_in_minutes, presence: true, numericality: { only: :integer }
 
