@@ -22,11 +22,22 @@ class Api::AppointmentsController < ApplicationController
 
   def create
     # TODO:
+    @new_appt = Appointment.new(create_params)
+
+    if @new_appt.save
+      render json: @new_appt, status: :created
+    else
+      render json: @new_appt.errors, status: :unprocessable_entity
+    end
   end
 
   private
 
   def index_params
     params.permit(:doctor_id, :start_date, :end_date)
+  end
+
+  def create_params
+    params.require(:appointment).permit(:doctor_id, :patient_id, :start_time, :duration)
   end
 end
