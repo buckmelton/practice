@@ -12,6 +12,10 @@ class Api::AppointmentsController < ApplicationController
       @appts = @appts.where(start_time: Time.zone.parse(params[:start_date])..Time.zone.parse(params[:end_date]))
     end
 
+    if index_params[:upcoming]
+      @appointments = @appointments.order(:start_time)
+    end
+
     render json: @appts, include:
       {
         doctor: { only: [:id, :name] },
